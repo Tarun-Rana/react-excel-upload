@@ -1,0 +1,99 @@
+
+
+export default class AddExcel extends Component {
+    constructor (props) {
+        super(props);
+        this.state = {
+            file: ''
+        };
+    }
+    changeHandle (e) {
+        console.log('inside if');
+        this.setState({ file: e.target.files[0] });
+    }
+
+  submitExcel = e => {
+      e.preventDefault();
+      let formData = new FormData();
+      formData.append('file', this.state.file);
+      formData.append('userId', '1');
+      console.log('data');
+      console.log(formData);
+      Service.addExcel(formData)
+          .then(res => {
+              console.log('success');
+              console.log(res.data);
+              // eslint-disable-next-line react/prop-types
+              this.props.history.push('/');
+          })
+          .catch(res => {
+              console.log('failure');
+              console.log(res.data);
+          });
+  }
+  render () {
+      const ColoredLine = ({ color }) => (
+          <hr
+              style={{
+                  color: color,
+                  backgroundColor: color,
+                  marginTop: 0,
+                  height: 1
+              }}
+          />
+      );
+      let { file } = this.state;
+      return (
+          <Container className=''>
+              <Row className='breadcrum'>
+                  <Col>
+                      <h4> Excel</h4>
+                  </Col>
+
+              </Row>
+              <ColoredLine color='grey' />
+              <Row>
+                  <Col>
+                      <Card>
+                          <Card.Header className='text-center'>
+                              <Card.Title>
+                                  <h4>Add Excel</h4>
+                              </Card.Title>
+                          </Card.Header>
+                          <Card.Body>
+                              <Form>
+                                  <Form.Group>
+                                      <Form.File
+                                          className='position-relative'
+                                          required
+                                          name='file'
+                                          label='Please choose excel to upload'
+                                          vaulue={file}
+                                          onChange={e => this.changeHandle(e)}
+                                          feedbackTooltip
+                                      />
+                                  </Form.Group>
+                                  <Row className='centerHorizantalButton'>
+                                      <Button
+                                          className='mt-3 mr-3'
+                                          variant='success'
+                                          type='submit'
+                                          onClick={this.submitExcel}
+                                      >
+                      Submit
+                                      </Button>
+                                      <Link to='/'>
+                                          <Button className='mt-3' variant='light'>
+                        Back
+                                          </Button>
+                                      </Link>
+                                  </Row>
+                              </Form>
+                          </Card.Body>
+                      </Card>
+                  </Col>
+              </Row>
+          </Container>
+      );
+  }
+}
